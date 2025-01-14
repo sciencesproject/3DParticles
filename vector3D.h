@@ -10,6 +10,8 @@ class Vector3D {
 		Vector3D(float x, float y, float z);
 		string as_string();
 		
+		Vector3D operator=(Vector3D* vector3d);
+		Vector3D operator=(Vector3D vector3d);
 		Vector3D operator+(float factor);
 		Vector3D operator+(Vector3D* vector3d);
 		void operator+=(float factor);

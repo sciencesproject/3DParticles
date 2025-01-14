@@ -37,11 +37,11 @@ void Simulation::run() {
 		for (auto &other : near_particles) {
 			float distance = particle->get_distance(other, true, true);
 			float interaction_strenght;
-			if (particle->group == particle->group) interaction_strenght = pow(particle->group->self_interaction, 2) / distance;
+			if (particle->group == particle->group) interaction_strenght = particle->group->self_interaction / distance;
 			else {
 				for (auto &other_interaction : particle->group->interactions) {
 					if (other_interaction.first == other->group) {
-						interaction_strenght = pow(other_interaction.second, 2) / distance;
+						interaction_strenght = other_interaction.second / distance;
 					}
 				}
 			}
@@ -49,5 +49,7 @@ void Simulation::run() {
 			particle->speed += add_speed;
 			particle->apply_speed();
 		}
+		cout << particle->pos.as_string() << "\t" << particle->speed.as_string() << endl;
 	}
+	cout << endl;
 }
