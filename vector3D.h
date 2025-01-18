@@ -9,9 +9,13 @@ class Vector3D {
 		Vector3D();
 		Vector3D(float x, float y, float z);
 		string as_string();
+		float get_sum();
+		float get_absolute_sum();
 		
-		Vector3D operator=(Vector3D* vector3d);
-		Vector3D operator=(Vector3D vector3d);
+//		Vector3D operator=(Vector3D* vector3d);
+//		Vector3D operator=(Vector3D vector3d);
+		bool operator==(Vector3D* vector3d);
+		bool operator==(Vector3D vector3d);
 		Vector3D operator+(float factor);
 		Vector3D operator+(Vector3D* vector3d);
 		void operator+=(float factor);

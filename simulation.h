@@ -8,14 +8,13 @@ using namespace std;
 
 class Simulation {
 	public:
-		Simulation();
-		Simulation(vector<Particle*> particles);
-		Simulation(float air_resistance);
-		Simulation(float air_resistance, vector<Particle*> particles);
+		Simulation(float air_resistance, float max_range);
+		Simulation(float air_resistance, float max_range, vector<Particle*> particles);
 		void run(int steps); // execute run steps times
 		void run();
 		
 		float air_resistance;
+		float max_range;
 		vector<Particle*> particles;
 };
 

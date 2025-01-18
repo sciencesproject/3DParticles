@@ -11,26 +11,34 @@ using namespace std;
 #include "simulation.h"
 #include "vector3D.h"
 
+int total_particles = 100;
+
 int main(int argc, char** argv) {
-	Group g(.1);
-	Simulation sim(0);
+	Group g(.8);
+	Simulation sim(.8, 15);
 	vector<Particle> particles;
-	for (int i = 0; i<4; i++) particles.push_back(Particle(&g, i%2-.5, floor(i/2)-0.5, 0));
+	particles.reserve(total_particles);
+	for (int i = 0; i<total_particles; i++) {
+		particles.push_back(Particle(&g, i%(int)pow(total_particles, 0.5), floor(i/pow(total_particles, 0.5)), 0));
+		std::remove(((string)("p" + to_string(i) + ".obj")).c_str());
+		ofstream pf("p" + to_string(i) + ".obj");
+		pf.close();
+	}
 	for (auto &p : particles) sim.particles.push_back(&p);
 	
-	std::remove("p2.obj");
-	ofstream p2f("p2.obj");
-	Particle* p2 = &particles[1];
-	p2f << "v " << p2->pos.x << " " << p2->pos.y << " " << p2->pos.z << endl;
-	for (int i = 0; i<10; i++) {
+	for (int i = 0; i<200; i++) {
 		std::remove(("all" + to_string(i) + ".obj").c_str());
 		ofstream allf("all" + to_string(i) + ".obj");
 		for (auto &p : particles) allf << "v " << p.pos.x << " " << p.pos.y << " " << p.pos.z << endl;
 		allf.close();
 		
 		sim.run();
-		p2f << "v " << p2->pos.x << " " << p2->pos.y << " " << p2->pos.z << endl;
+		for (int i = 0; i<particles.size(); i++) {
+			ofstream pf("p" + to_string(i) + ".obj", std::ios_base::app);
+			pf << "v " << particles[i].pos.x << " " << particles[i].pos.y << " " << particles[i].pos.z << endl;
+			pf.close();
+		}
 	}
-	p2f.close();
+	
 	return 0;
 }

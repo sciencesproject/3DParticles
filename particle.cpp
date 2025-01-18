@@ -53,7 +53,11 @@ float Particle::get_distance(Particle* particle, bool use_self_old, bool use_oth
 }
 
 Vector3D Particle::get_normal(Particle* particle, bool use_self_old, bool use_other_old) {
-	if (use_self_old && use_other_old) return (particle->old - this->old) / this->get_distance(particle, use_self_old, use_other_old);
+	if (use_self_old && use_other_old) {
+		float sum = (particle->old - this->old).get_absolute_sum();
+		if (sum != 0) return (particle->old - this->old) / sum;
+		else return Vector3D(0, 0, 0);
+	}
 	if (use_self_old && !use_other_old) return (particle->old - this->pos) / this->get_distance(particle, use_self_old, use_other_old);
 	if (!use_self_old && use_other_old) return (particle->pos - this->old) / this->get_distance(particle, use_self_old, use_other_old);
 	return (particle->pos - this->pos) / this->get_distance(particle, use_self_old, use_other_old);
