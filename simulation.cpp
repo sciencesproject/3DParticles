@@ -3,6 +3,9 @@
 #include "simulation.h"
 #include "vector3D.h"
 
+#include <iostream>
+using namespace std;
+
 Simulation::Simulation(float air_resistance, float max_range)
 	: air_resistance(air_resistance), max_range(max_range), particles((vector<Particle*>){}) {}
 
@@ -10,7 +13,7 @@ Simulation::Simulation(float air_resistance, float max_range, vector<Particle*> 
 	: air_resistance(air_resistance), max_range(max_range), particles(particles) {}
 
 void Simulation::run(int steps) {
-	for (int step; step != steps; step++) this->run();
+	for (int step = 0; step < steps; step++) this->run();
 }
 
 void Simulation::run() {
@@ -27,16 +30,26 @@ void Simulation::run() {
 		
 		for (auto &other : near_particles) {
 			float distance = particle->get_distance(other, true, true);
-			float interaction_strenght;
-			if (particle->group == particle->group) interaction_strenght = particle->group->self_interaction / pow(distance, distance);
+			float interaction_value;
+			if (particle->group == other->group) interaction_value = particle->group->self_interaction;
 			else {
-				for (auto &other_interaction : particle->group->interactions) {
+				bool found = false;
+				for (auto &other_interaction : other->group->interactions) {
+					if (other_interaction.first == particle->group) {
+						interaction_value = other_interaction.second;
+						found = true;
+						break;
+					}
+				}
+				if (!found) for (auto &other_interaction : particle->group->interactions) {
 					if (other_interaction.first == other->group) {
-						interaction_strenght = other_interaction.second / pow(distance, 2);
+						interaction_value = other_interaction.second;
+						break;
 					}
 				}
 			}
-			Vector3D add_speed = particle->get_normal(other, true, true) * interaction_strenght;
+			float interaction_strength = interaction_value / pow(distance, distance);
+			Vector3D add_speed = particle->get_normal(other, true, true) * interaction_strength;
 			particle->speed += add_speed;
 		}
 		particle->apply_speed();
