@@ -11,7 +11,7 @@
 >   * [Windows](#windows)
 >   * [MacOS](#macos)
 > - [How to use](#how-to-use)
->   * [Command line:](#command-line-)
+>   * [Command line:](#command-line)
 >   * [Configuration file](#configuration-file)
 >   * [Outputs files](#outputs-files)
 >   * [Using Blender](#using-blender)
@@ -30,7 +30,7 @@ g++ -c particle.cpp -o ./bin/particle.o
 g++ -c simulation.cpp -o ./bin/simulation.o
 g++ -c group.cpp -o ./bin/group.o
 g++ -c vector3D.cpp -o ./bin/vector3D.o
-g++ ./bin/main.o ./bin/particle.o ./bin/simulation.o ./bin/group.o ./bin/vector3D.o -o ./bin/3Dparticles.exe -static-libgcc
+g++ ./bin/main.o ./bin/particle.o ./bin/simulation.o ./bin/group.o ./bin/vector3D.o -o ./bin/3Dparticles -static-libgcc -pthread
 ```
 
 ### Windows
@@ -55,11 +55,13 @@ I don't know how to build C++ programs on Mac, but I think Linux command works o
 
 The program takes a `.conf` file as input and output a Wavefront `.obj` file for each step and particle after a certain amount of simulation.
 
-### Command line:
+### Command line
 ```bash
-path/to/3Dparticles path/to/3Dparticles.conf
+path/to/3Dparticles path/to/3Dparticles.conf [threads]
 ```
-The command should be run in the object output folder.
+The `treads` argument is optional. It represent the number of threads can be used by the program. *More threads = Quicker computation*.
+
+> The command should be run in the object output folder.
 
 ### Configuration file
 
@@ -128,6 +130,7 @@ Now, you can run the animation and look the particles interacting !
 - [x] Multiple output possibilities
 - [ ] Simulation pause option
 - [ ] Boinc support
+- [x] Multithreading
 
 ### Algorithms
 
