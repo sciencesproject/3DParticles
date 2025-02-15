@@ -28,11 +28,13 @@ int step_log = 1;
 int step_start = 0; // TODO : implement
 vector<int> total_particles = {};
 vector<Group> groups = {};
+int max_thread = 1;
 
 void ex() {
-	ofstream outfile("D:\\fin.log", std::ios_base::app);
+	ofstream outfile("end.log", std::ios_base::app);
 	outfile << "OK" << endl;
 	outfile.close();
+	exit(0);
 }
 
 int main(int argc, char** argv) {
@@ -73,8 +75,11 @@ int main(int argc, char** argv) {
 	config.close();
 	for (int p = 0; p<total_particles.size(); p++) total_particles[p] = (int)pow(total_particles[p], 3);
 	
+	if (argc > 1) max_thread = stoi(string(argv[2]));
+	if (max_thread < 1) max_thread = 1;
+	
 	if (file_log) std::remove("steps.log");
-	Simulation sim(simulation_air_resistance, simulation_range);
+	Simulation sim(simulation_air_resistance, simulation_range, max_thread);
 	vector<Particle> particles;
 	particles.reserve(accumulate(total_particles.begin(), total_particles.end(), (int)0));
 	srand(seed);
@@ -124,10 +129,10 @@ int main(int argc, char** argv) {
 		}
 		if (file_log) {
 			ofstream outfile("steps.log", std::ios_base::app);
-			outfile << step << "\n" << (chrono::duration_cast<chrono::milliseconds>(t2 - t1)).count() << endl;
+			outfile << step+step_log << "\n" << (chrono::duration_cast<chrono::milliseconds>(t2 - t1)).count() << endl;
 			outfile.close();
 		}
-		if (term_log) cout << step << "\t" << (chrono::duration_cast<chrono::milliseconds>(t2 - t1)).count() << " ms"<< endl;
+		if (term_log) cout << step+step_log << "\t" << (chrono::duration_cast<chrono::milliseconds>(t2 - t1)).count() << " ms"<< endl;
 	}
 	
 	exit(0);
